@@ -1,39 +1,98 @@
-machine:
-    timezone: Asia/Tokyo
-    environment:
-      ANDROID_HOME: /usr/local/android-sdk-linux
-dependencies:
-  override:
-    - if ! $(grep -q "Pkg.Revision=25.2.5" $ANDROID_HOME/tools/source.properties); then echo y | android update sdk --no-ui --all --filter "tools"; fi
-    - if [ ! -e $ANDROID_HOME/build-tools/25.0.2 ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.2"; fi
-    - if [ ! -e $ANDROID_HOME/build-tools/26.0.1 ]; then echo y | android update sdk --no-ui --all --filter "build-tools-26.0.1"; fi
-    - if ! $(grep -q "Pkg.Revision=3" $ANDROID_HOME/platforms/android-26/source.properties); then echo y | android update sdk --no-ui --all --filter "android-26"; fi
-    - if ! $(grep -q "Pkg.Revision=3" $ANDROID_HOME/platforms/android-25/source.properties); then echo y | android update sdk --no-ui --all --filter "android-25"; fi
-    - if ! $(grep -q "Pkg.Revision=3" $ANDROID_HOME/platforms/android-23/source.properties); then echo y | android update sdk --no-ui --all --filter "android-23"; fi
-    - if ! $(grep -q "Pkg.Revision=5" $ANDROID_HOME/platforms/android-19/source.properties); then echo y | android update sdk --no-ui --all --filter "android-19"; fi
-    - if [ ! -e ~/.gradle/wrapper/dists/gradle-3.5-all ]; then ./gradlew init; fi
-  cache_directories:
-    - /usr/local/android-sdk-linux/tools
-    - /usr/local/android-sdk-linux/platforms/android-26
-    - /usr/local/android-sdk-linux/platforms/android-25
-    - /usr/local/android-sdk-linux/platforms/android-23
-    - /usr/local/android-sdk-linux/platforms/android-19
-    - /usr/local/android-sdk-linux/build-tools/25.0.2
-    - /usr/local/android-sdk-linux/build-tools/26.0.1
-  pre:
-    mkdir -p "$ANDROID_SDK/licenses"
-    echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_SDK/licenses/android-sdk-license"
-    echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_SDK/licenses/android-sdk-preview-license"
+version: 2
 
-test:
-  override:
-    - ./gradlew assembleDebug
-    - cp -r ~/$CIRCLE_PROJECT_REPONAME/app/build/outputs/apk/* $CIRCLE_ARTIFACTS
-      # unit test
-    - ./gradlew testDebugUnitTest
-    - cp -r ~/$CIRCLE_PROJECT_REPONAME/app/build/test-results/testDebugUnitTest/* $CIRCLE_TEST_REPORTS
-deployment:
-  master:
-    branch: master
-    commands:
-      - ./gradlew assembleRelease
+defaults: &defaults
+  working_directory: ~/code
+  docker:
+    - image: circleci/android:api-26-alpha
+  environment:
+    JVM_OPTS: -Xmx3200m
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Check lint
+          command: ./gradlew :app:check -x test
+      - run:
+          name: Build apk
+          command: ./gradlew :app:assembleDebug
+      - store_artifacts:
+          path: app/build/outputs/apk/app-debug.apk
+          destination: app-debug.apk
+      - store_test_results:
+          path: app/build/test-results
+      - persist_to_workspace:
+          root: ~/code
+          paths:
+            - .
+
+  check:
+    working_directory: ~/code
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - attach_workspace:
+          at: ~/code
+      - restore_cache:
+          key: gems-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
+      - run:
+          name: Run danger
+          command: bundle exec danger
+      - run:
+          name: Move artifacts
+          command: |
+            ARTIFACTS="/tmp/circle_artifacts"
+            mkdir -p "$ARTIFACTS"
+            cp -v "app/build/reports/checkstyle/checkstyle.xml" "$ARTIFACTS/"
+            cp -v "app/build/reports/findbugs/findbugs.xml" "$ARTIFACTS/"
+            cp -v "app/build/reports/pmd/pmd.xml" "$ARTIFACTS/"
+            cp -v "app/build/reports/pmd/cpd.xml" "$ARTIFACTS/"
+            cp -v "app/build/reports/lint-results.xml" "$ARTIFACTS/"
+      - save_cache:
+          paths:
+            - vendor/bundle
+          key: gems-{{ checksum "Gemfile.lock" }}
+      - store_artifacts:
+          path: "/tmp/circle_artifacts"
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/code
+      - run:
+          name: Build apk
+          command: ./gradlew :app:assembleRelease
+      - store_artifacts:
+          path: app/build/outputs/apk/app-release.apk
+          destination: app-release.apk
+      - store_artifacts:
+          path: app/build/outputs/mapping/release/dump.txt
+          destination: dump.txt
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - check:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - build
+            - check
+          filters:
+            branches:
+              only: master
