@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -14,5 +19,18 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textView = (TextView)findViewById(R.id.test1);
         textView.setText("aaaaaaaaaaaaaaaaaaaa");
+
+        method();
     }
+
+    public void method() {
+        String text = null;
+        System.out.println("text.length=" + text.length());
+
+        try {
+            InputStream in = new FileInputStream(new File("./test"));
+        } catch (IOException e) {
+        }
+    }
+
 }
