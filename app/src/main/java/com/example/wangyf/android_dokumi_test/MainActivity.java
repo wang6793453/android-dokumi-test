@@ -1,5 +1,7 @@
 package com.example.wangyf.android_dokumi_test;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -26,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
             i.toString();
 
         }
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.commit();
 
         method();
     }

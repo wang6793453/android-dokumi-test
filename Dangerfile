@@ -41,3 +41,13 @@ android_lint.gradle_task = "app:lint"
 android_lint.report_file = "app/build/reports/lint-results.xml"
 android_lint.filtering = true
 android_lint.lint(inline_mode: true)
+
+
+####
+#
+# checkstyle
+#
+####
+github.dismiss_out_of_range_messages
+checkstyle_format.base_path = Dir.pwd
+checkstyle_format.report 'app/build/reports/checkstyle/checkstyle.xml'
