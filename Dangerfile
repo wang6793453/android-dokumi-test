@@ -29,7 +29,7 @@ warn("a large PR") if git.lines_of_code > 300
 #
 ####
 # checkstyle_format.base_path = Dir.pwd
-checkstyle_format.report 'app/build/reports/checkstyle/checkstyle.xml'
+checkstyle_format.report_file =  'app/build/reports/checkstyle/checkstyle.xml'
 
 ####
 #
