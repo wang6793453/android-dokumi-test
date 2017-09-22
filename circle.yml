@@ -1,8 +1,31 @@
 machine:
     timezone: Asia/Tokyo
-
+    environment:
+      ANDROID_HOME: /usr/local/android-sdk-linux
 dependencies:
-  pre:
-      - echo y | android update sdk --no-ui --all --filter tool,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository
-      - mkdir $ANDROID_HOME/licenses
-      - mv android-sdk-license\?dl\=0 $ANDROID_HOME/licenses/android-sdk-license
+  override:
+    - if ! $(grep -q "Pkg.Revision=25.2.5" $ANDROID_HOME/tools/source.properties); then echo y | android update sdk --no-ui --all --filter "tools"; fi
+    - if [ ! -e $ANDROID_HOME/build-tools/25.0.2 ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.2"; fi
+    - if ! $(grep -q "Pkg.Revision=3" $ANDROID_HOME/platforms/android-25/source.properties); then echo y | android update sdk --no-ui --all --filter "android-25"; fi
+    - if ! $(grep -q "Pkg.Revision=3" $ANDROID_HOME/platforms/android-23/source.properties); then echo y | android update sdk --no-ui --all --filter "android-23"; fi
+    - if ! $(grep -q "Pkg.Revision=5" $ANDROID_HOME/platforms/android-19/source.properties); then echo y | android update sdk --no-ui --all --filter "android-19"; fi
+    - if [ ! -e ~/.gradle/wrapper/dists/gradle-3.5-all ]; then ./gradlew init; fi
+  cache_directories:
+    - /usr/local/android-sdk-linux/tools
+    - /usr/local/android-sdk-linux/platforms/android-25
+    - /usr/local/android-sdk-linux/platforms/android-23
+    - /usr/local/android-sdk-linux/platforms/android-19
+    - /usr/local/android-sdk-linux/build-tools/25.0.2
+
+test:
+  override:
+    - ./gradlew assembleDebug
+    - cp -r ~/$CIRCLE_PROJECT_REPONAME/app/build/outputs/apk/* $CIRCLE_ARTIFACTS
+      # unit test
+    - ./gradlew testDebugUnitTest
+    - cp -r ~/$CIRCLE_PROJECT_REPONAME/app/build/test-results/testDebugUnitTest/* $CIRCLE_TEST_REPORTS
+deployment:
+  master:
+    branch: master
+    commands:
+      - ./gradlew assembleRelease
