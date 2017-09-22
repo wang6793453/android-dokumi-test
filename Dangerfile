@@ -28,8 +28,8 @@ warn("A pull request must have some assignees") if github.pr_json["assignee"].ni
 # Findbugs
 #
 ####
+findbugs.gradle_task = "app:findbugs"
 findbugs.report_file = "app/build/reports/findbugs/findbugs.xml"
-findbugs.gradle_module = "app"
 findbugs.report(true)
 
 ####
@@ -38,6 +38,6 @@ findbugs.report(true)
 #
 ####
 android_lint.gradle_task = "app:lint"
-android_lint.report_file = "app/build/reports/lint/lint-result.xml"
+android_lint.report_file = "app/build/reports/lint-results.xml"
 android_lint.filtering = true
 android_lint.lint(inline_mode: true)
