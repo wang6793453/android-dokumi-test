@@ -16,5 +16,6 @@ class Main2Activity : AppCompatActivity() {
         }
         val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
         editor.commit()
+
     }
 }
