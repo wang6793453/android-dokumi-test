@@ -36,13 +36,13 @@ checkstyle_format.report 'app/build/reports/checkstyle/checkstyle.xml'
 # Findbugs
 #
 ####
-# findbugs.gradle_task = "app:findbugs"
-# findbugs.report_file = "app/build/reports/findbugs/findbugs.xml"
-# findbugs.report(true)
+findbugs.gradle_task = "app:findbugs"
+findbugs.report_file = "app/build/reports/findbugs/findbugs.xml"
+findbugs.report(true)
 
-require 'findbugs_translate_checkstyle_format'
-findbugs_xml = ::FindbugsTranslateCheckstyleFormat::Script.translate(File.read('app/build/reports/findbugs/findbugs.xml'))
-checkstyle_format.report_by_text findbugs_xml
+# require 'findbugs_translate_checkstyle_format'
+# findbugs_xml = ::FindbugsTranslateCheckstyleFormat::Script.translate(File.read('app/build/reports/findbugs/findbugs.xml'))
+# checkstyle_format.report_by_text findbugs_xml
 
 ####
 #
