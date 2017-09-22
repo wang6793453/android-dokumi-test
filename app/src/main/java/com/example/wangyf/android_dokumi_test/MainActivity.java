@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         if (true){
             Integer i = null;
             i.toString();
-
         }
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
