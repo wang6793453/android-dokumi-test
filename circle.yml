@@ -58,7 +58,7 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-26-alpha
   environment:
-    JAVA_HOME: /Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk/Contents/Home
+    JAVA_HOME: /Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk
     JVM_OPTS: -Xmx3200m
 
 jobs:
