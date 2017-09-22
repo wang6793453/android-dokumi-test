@@ -58,6 +58,7 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-26-alpha
   environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
     JVM_OPTS: -Xmx3200m
 
 jobs:
