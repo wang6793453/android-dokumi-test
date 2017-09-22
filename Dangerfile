@@ -49,13 +49,14 @@ findbugs.report(true)
 # Android Lint
 #
 ####
-# android_lint.gradle_task = "app:lint"
-# android_lint.report_file = "app/build/reports/lint-results.xml"
-# android_lint.filtering = true
-# android_lint.lint(inline_mode: true)
-require 'android_lint_translate_checkstyle_format'
-android_lint_xml = ::AndroidLintTranslateCheckstyleFormat::Script.translate(File.read('app/build/reports/lint-results.xml'))
-checkstyle_format.report_by_text android_lint_xml
+android_lint.gradle_task = "app:lint"
+android_lint.report_file = "app/build/reports/lint-results.xml"
+android_lint.filtering = true
+android_lint.lint(inline_mode: true)
+
+# require 'android_lint_translate_checkstyle_format'
+# android_lint_xml = ::AndroidLintTranslateCheckstyleFormat::Script.translate(File.read('app/build/reports/lint-results.xml'))
+# checkstyle_format.report_by_text android_lint_xml
 
 
 # PMD
