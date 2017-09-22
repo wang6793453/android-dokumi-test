@@ -13,7 +13,6 @@ class Main2Activity : AppCompatActivity() {
         if (true) {
             val i: Int? = null
             i!!.toString()
-
         }
 
         val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
