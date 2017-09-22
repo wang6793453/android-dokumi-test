@@ -20,6 +20,13 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = (TextView)findViewById(R.id.test1);
         textView.setText("aaaaaaaaaaaaaaaaaaaa");
 
+
+        if (true){
+            Integer i = null;
+            i.toString();
+
+        }
+
         method();
     }
 
