@@ -8,5 +8,14 @@ class Main2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
+
+        if (true) {
+            val i: Int? = null
+            i!!.toString()
+
+        }
+
+        val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
+        editor.commit()
     }
 }
