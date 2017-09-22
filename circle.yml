@@ -20,6 +20,10 @@ dependencies:
     - /usr/local/android-sdk-linux/platforms/android-19
     - /usr/local/android-sdk-linux/build-tools/25.0.2
     - /usr/local/android-sdk-linux/build-tools/26.0.1
+  pre:
+    mkdir -p "$ANDROID_SDK/licenses"
+    echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_SDK/licenses/android-sdk-license"
+    echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_SDK/licenses/android-sdk-preview-license"
 
 test:
   override:
