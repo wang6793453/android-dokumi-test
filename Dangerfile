@@ -18,12 +18,12 @@ warn("このプルリクが編集中のようです。") if github.pr_title.incl
 warn("プルリクの変更箇所が多すぎるので分割しましょう。") if git.lines_of_code > 500
 
 # マージコミットがある
-has_merge_commit = git.commits.any? { |c| c.message =~ /^Merge branch '#{github.branch_for_base}'/ }
-fail "マージコミットがあるのでリベースしましょう。" unless has_merge_commit
+# has_merge_commit = git.commits.any? { |c| c.message =~ /^Merge branch '#{github.branch_for_base}'/ }
+# fail "マージコミットがあるのでリベースしましょう。" unless has_merge_commit
 
 # マイルストーンが設定されていない
-has_milestone = github.pr_json["milestone"] != nil
-warn("プルリクにマイルストーンが設定されていないようです。", sticky: false) unless has_milestone
+# has_milestone = github.pr_json["milestone"] != nil
+# warn("プルリクにマイルストーンが設定されていないようです。", sticky: false) unless has_milestone
 
 # 誰もアサインされていない
 has_assignee = github.pr_json["assignee"] != nil
