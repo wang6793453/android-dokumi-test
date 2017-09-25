@@ -1,4 +1,4 @@
-version: 2
+version: 1
 machine:
     timezone: Asia/Tokyo
     environment:
@@ -47,6 +47,9 @@ test:
     - bundle exec danger
     - cp app/build/reports/findbugs/findbugs.xml $CIRCLE_ARTIFACTS || true
     - cp app/build/reports/lint-results.xml $CIRCLE_ARTIFACTS || true
+    - cp app/build/reports/checkstyle/checkstyle.xml $CIRCLE_ARTIFACTS || true
+    - cp app/build/reports/pmd/pmd.xml $CIRCLE_ARTIFACTS || true
+    - cp app/build/reports/pmd/cpd.xml $CIRCLE_ARTIFACTS || true
 
 deployment:
   master:
