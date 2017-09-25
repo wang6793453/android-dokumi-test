@@ -58,9 +58,10 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-26-alpha
   environment:
-    JAVA_HOME: /Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home/bin
+    JAVA7_HOME: /usr/lib/jvm/java-7-openjdk-amd64
     JVM_OPTS: -Xmx3200m
-
+  java:
+    version: openjdk8
 
 jobs:
   build:
