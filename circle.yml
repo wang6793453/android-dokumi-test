@@ -137,6 +137,13 @@ jobs:
       - store_artifacts:
           path: app/build/outputs/mapping/release/dump.txt
           destination: dump.txt
+test:
+  override:
+    - bundle exec danger
+    - cp app/build/reports/findbugs/findbugs.xml $CIRCLE_ARTIFACTS || true
+    - cp app/build/reports/lint-results.xml $CIRCLE_ARTIFACTS || true
+    - cp app/build/reports/checkstyle/checkstyle.xml $CIRCLE_ARTIFACTS || true
+
 workflows:
   version: 2
   build_and_deploy:
