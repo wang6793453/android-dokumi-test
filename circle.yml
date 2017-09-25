@@ -58,6 +58,7 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-26-alpha
   environment:
+    JAVA_HOME: /Applications/Android Studio.app/Contents/jre/jdk/Contents/Home
     JVM_OPTS: -Xmx3200m
 
 
