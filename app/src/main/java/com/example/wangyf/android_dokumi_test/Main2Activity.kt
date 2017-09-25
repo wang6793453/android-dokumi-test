@@ -10,10 +10,6 @@ class Main2Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
-        if (true) {
-            val i: Int? = null
-            i!!.toString()
-        }
         val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
         editor.commit()
 
