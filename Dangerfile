@@ -26,8 +26,8 @@ warn("プルリクの変更箇所が多すぎるので分割しましょう。")
 # warn("プルリクにマイルストーンが設定されていないようです。", sticky: false) unless has_milestone
 
 # 誰もアサインされていない
-has_assignee = github.pr_json["assignee"] != nil
-warn("誰もアサインされていないようです。", sticky: false) unless has_assignee
+# has_assignee = github.pr_json["assignee"] != nil
+# warn("誰もアサインされていないようです。", sticky: false) unless has_assignee
 
 ####
 #
