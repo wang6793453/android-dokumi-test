@@ -64,8 +64,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  danger
   android_lint_translate_checkstyle_format
+  danger
   danger-checkstyle_format
   findbugs_translate_checkstyle_format
   pmd_translate_checkstyle_format

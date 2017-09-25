@@ -4,31 +4,36 @@
 #
 ####
 github.dismiss_out_of_range_messages
+checkstyle_format.base_path = Dir.pwd
 
 ####
 #
 # for PR
 #
 ####
-if github.pr_title.include? "[WIP]" || github.pr_labels.include?("WIP")
-  warn("PR is classed as Work in Progress")
-end
+# プルリクが編集中
+warn("このプルリクが編集中のようです。") if github.pr_title.include? "[WIP]"
 
-# Warn when there is a big PR
-warn("a large PR") if git.lines_of_code > 300
+# プルリクがでかすぎる
+warn("プルリクの変更箇所が多すぎるので分割しましょう。") if git.lines_of_code > 500
 
-# Warn when PR has no milestone
-# warn("A pull request must have a milestone set") if github.pr_json["milestone"].nil?
+# マージコミットがある
+# has_merge_commit = git.commits.any? { |c| c.message =~ /^Merge branch '#{github.branch_for_base}'/ }
+# fail "マージコミットがあるのでリベースしましょう。" unless has_merge_commit
 
-# Warn when PR has no assignees
-# warn("A pull request must have some assignees") if github.pr_json["assignee"].nil?
+# マイルストーンが設定されていない
+# has_milestone = github.pr_json["milestone"] != nil
+# warn("プルリクにマイルストーンが設定されていないようです。", sticky: false) unless has_milestone
+
+# 誰もアサインされていない
+has_assignee = github.pr_json["assignee"] != nil
+warn("誰もアサインされていないようです。", sticky: false) unless has_assignee
 
 ####
 #
 # checkstyle
 #
 ####
-checkstyle_format.base_path = Dir.pwd
 checkstyle_format.report 'app/build/reports/checkstyle/checkstyle.xml'
 
 ####
@@ -53,6 +58,7 @@ checkstyle_format.report_by_text findbugs_xml
 # android_lint.report_file = "app/build/reports/lint-results.xml"
 # android_lint.filtering = true
 # android_lint.lint(inline_mode: true)
+
 require 'android_lint_translate_checkstyle_format'
 android_lint_xml = ::AndroidLintTranslateCheckstyleFormat::Script.translate(File.read('app/build/reports/lint-results.xml'))
 checkstyle_format.report_by_text android_lint_xml

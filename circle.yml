@@ -58,7 +58,10 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-26-alpha
   environment:
+    JAVA7_HOME: /usr/lib/jvm/java-7-openjdk-amd64
     JVM_OPTS: -Xmx3200m
+  java:
+    version: openjdk8
 
 jobs:
   build:
@@ -134,6 +137,10 @@ jobs:
       - store_artifacts:
           path: app/build/outputs/mapping/release/dump.txt
           destination: dump.txt
+test:
+  override:
+    - ./scripts/saddler.sh
+
 workflows:
   version: 2
   build_and_deploy:
