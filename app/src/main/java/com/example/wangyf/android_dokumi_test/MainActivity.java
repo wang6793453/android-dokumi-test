@@ -19,6 +19,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        TextView textView = (TextView)findViewById(R.id.test1);
+//        textView.setText("aaaaaaaaaaaaaaaaaaaa");
+//
+//
+//        if (true){
+//            Integer i = null;
+//            i.toString();
+//        }
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.commit();
+
         TextView textView = (TextView)findViewById(R.id.test1);
         textView.setText("aaaaaaaaaaaaaaaaaaaa");
 
@@ -28,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
             i.toString();
         }
 
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.commit();
+//        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+//        editor.commit();
 
         method();
     }
